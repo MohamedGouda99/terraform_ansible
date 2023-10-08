@@ -85,4 +85,4 @@ jobs:
             cd ../ansible
             chmod 777 tim.pem
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
-            echo "MISSION 44"
+            echo "MISSION 42"

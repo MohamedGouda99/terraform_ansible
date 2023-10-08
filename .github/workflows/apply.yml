@@ -79,9 +79,10 @@ jobs:
       
       - name: Configure Podman
         run: |
-            chmod +x update_inventory.sh
-            ./update_inventory.sh
-            cd $GITHUB_WORKSPACE/ansible
+            cd $GITHUB_WORKSPACE/project
+            chmod +x update_hosts.sh
+            ./update_hosts.sh
+            cd ../ansible
             chmod 777 tim.pem
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "MISSION 44"

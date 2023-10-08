@@ -54,17 +54,14 @@ jobs:
       - name: Install Ansible
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install ansible
-          
+          pip install ansible
+          pip install boto3
           
 
       - name: Verify Ansible Installation
         run: ansible --version
       
-      - name: install boto3
-        run : |
-          cd $GITHUB_WORKSPACE/ansible/roles
-          pip3 install boto3 --upgrade
+      
 
       - name: Delete SSH RULE
         run: |

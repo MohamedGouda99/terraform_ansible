@@ -63,17 +63,17 @@ jobs:
       
       
 
-      - name: Delete SSH RULE
-        run: |
+      # - name: Delete SSH RULE
+      #   run: |
             
-            cd $GITHUB_WORKSPACE/ansible
+      #       cd $GITHUB_WORKSPACE/ansible
            
-            ansible-playbook delete_ssh_rule.yml
+      #       ansible-playbook delete_ssh_rule.yml
 
-      - name: Add SSH RULE
-        run: |
-            cd $GITHUB_WORKSPACE/ansible
-            ansible-playbook add_ssh_rule.yml
+      # - name: Add SSH RULE
+      #   run: |
+      #       cd $GITHUB_WORKSPACE/ansible
+      #       ansible-playbook add_ssh_rule.yml
       
       - name: Configure Podman
         run: |

@@ -35,7 +35,7 @@ jobs:
           aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
           aws configure set default.region ${{secrets.AWS_REGION}}
 
-          chmod +x update_hosts.sh
+          chmod +x update_hosts.sh && chmod +x restore_tfstate.sh
           sudo apt install dos2unix 
           dos2unix update_hosts.sh
           ./restore_tfstate.sh

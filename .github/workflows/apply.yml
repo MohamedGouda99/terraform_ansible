@@ -88,9 +88,6 @@ jobs:
     runs-on: ubuntu-latest
    
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/ansible
-        with: 
-          playbook: ./.github/ansible/install_podman
-          inventory: ./.github/ansible/hosts
+      - name: deployAnsible
+        run: ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
 

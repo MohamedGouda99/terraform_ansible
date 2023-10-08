@@ -80,6 +80,6 @@ jobs:
             chmod +x update_inventory.sh
             ./update_inventory.sh
             cd $GITHUB_WORKSPACE/ansible
-
+            chmod 777 tim.pem
             sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "MISSION COMPLETED"

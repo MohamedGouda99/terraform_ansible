@@ -83,4 +83,4 @@ jobs:
             cd $GITHUB_WORKSPACE/ansible
             chmod 777 tim.pem
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
-            echo "MISSION 656"
+            echo "MISSION 44"

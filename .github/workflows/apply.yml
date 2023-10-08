@@ -39,10 +39,13 @@ jobs:
          
 
       - name: Convert line endings
-        run:  sed -i 's/\r$//' copy_tfstate.sh
+        run:  |
+          cd $GITHUB_WORKSPACE/project
+          sed -i 's/\r$//' copy_tfstate.sh
 
       - name: Execute copy_tfstate.sh
         run: |
+          $GITHUB_WORKSPACE/project
           chmod +x copy_tfstate.sh 
           ./copy_tfstate.sh
       

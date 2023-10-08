@@ -1,23 +1,16 @@
-# This workflow builds and pushes a Docker image to AWS ECR when changes are pushed to the 'main' branch.
+name: Apply Terraform INFRA then Apply Ansible
 
-name: Build and Push Image to AWS ECR
-
-# Define the event trigger for the workflow
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
-# Define the jobs to be executed in the workflow
 jobs:
-  # Job to install Terraform and apply infrastructure
-  install_terraform:
+  Build_Project:
     runs-on: ubuntu-latest
     steps:
-      # Step: Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step: Install dependencies, including Terraform
       - name: Install dependencies
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
@@ -29,56 +22,56 @@ jobs:
           wget https://releases.hashicorp.com/terraform/1.0.9/terraform_1.0.9_linux_amd64.zip
           unzip terraform_1.0.9_linux_amd64.zip
           sudo mv terraform /usr/local/bin/
-
           echo "DONE"
 
-      # Step: Display Terraform version
       - name: Build
         run: terraform version
 
-      # Step: Apply infrastructure using Terraform
       - name: Apply
         run: |
           cd $GITHUB_WORKSPACE/project
-
           sudo apt install awscli
           aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY_ID}}
           aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
           aws configure set default.region ${{secrets.AWS_REGION}}
-          
           terraform init
           terraform apply --auto-approve 
           chmod +x copy_tfstate.sh
           ./copy_tfstate.sh
 
-
-  # Job to build and push the Docker image to ECR
-  build-and-push:
-    needs: install_terraform
-    name: Build and Push to ECR
+  Apply_Ansible:
     runs-on: ubuntu-latest
+    needs: Build_Project
     steps:
-      # Step: Check out the repository code
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Step: Configure AWS credentials for authentication
-      - name: Configure AWS credentials
-        run: |
-          aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
-          aws configure set default.region ${{secrets.AWS_REGION}}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9' # Use the desired Python version
 
-      # Step: Log in to Amazon ECR
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      # Step: Build, tag, and push Docker image to ECR
-      - name: Build, Tag, and Push the Image to Amazon ECR
-        id: build-image1
+      - name: Install Ansible
         run: |
-          cd $GITHUB_WORKSPACE/python_app
-          docker build -t my-first-ecr-repo .
-          docker tag my-first-ecr-repo:latest 488777800893.dkr.ecr.eu-west-2.amazonaws.com/my-first-ecr-repo:latest
-          docker push 488777800893.dkr.ecr.eu-west-2.amazonaws.com/my-first-ecr-repo:latest
+          python3 -m pip install --upgrade pip
+          pip3 install ansible
+
+      - name: Verify Ansible Installation
+        run: ansible --version
+      
+      - name: Delete SSH RULE
+        run: |
+            cd $GITHUB_WORKSPACE/ansible
+            ansible-playbook delete_ssh_rule.yml
+
+      - name: Add SSH RULE
+        run: |
+            cd $GITHUB_WORKSPACE/ansible
+            ansible-playbook add_ssh_rule.yml
+      
+      - name: Configure Podman
+        run: |
+            sudo chmod +x update_inventory.sh
+            ./update_inventory.sh
+            cd $GITHUB_WORKSPACE/ansible
+            sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman.yml

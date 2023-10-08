@@ -38,45 +38,22 @@ jobs:
           #terraform apply --auto-approve 
           #chmod +x copy_tfstate.sh 
           #./copy_tfstate.sh
-
-         
-
-  Configure_Ansible:
-    runs-on: ubuntu-latest
-    needs: Build_Project
-    steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+  
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10' # Use the desired Python version
+
 
       - name: Install Ansible
         run: |
           python3 -m pip install --upgrade pip
           pip install ansible
           pip install boto3
-          
 
-      - name: Verify Ansible Installation
-        run: ansible --version
-      
-      
 
-      # - name: Delete SSH RULE
-      #   run: |
-            
-      #       cd $GITHUB_WORKSPACE/ansible
-           
-      #       ansible-playbook delete_ssh_rule.yml
-
-      # - name: Add SSH RULE
-      #   run: |
-      #       cd $GITHUB_WORKSPACE/ansible
-      #       ansible-playbook add_ssh_rule.yml
-      
       - name: Exexcuting update_hosts.sh
         run: |
             cd $GITHUB_WORKSPACE/project
@@ -84,14 +61,40 @@ jobs:
             ./update_hosts.sh
             cd ../ansible
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+          
 
-  # deployAnsible:
-  #   needs: Configure_Ansible
+         
+
+  # Configure_Ansible:
   #   runs-on: ubuntu-latest
-   
+  #   needs: Build_Project
   #   steps:
-  #     - name: deployAnsible
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.10' # Use the desired Python version
+
+  #     - name: Install Ansible
   #       run: |
-  #         cd ansible
-  #         ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+  #         python3 -m pip install --upgrade pip
+  #         pip install ansible
+  #         pip install boto3
+          
+
+  #     - name: Verify Ansible Installation
+  #       run: ansible --version
+      
+      
+  #     - name: Exexcuting update_hosts.sh
+  #       run: |
+  #           cd $GITHUB_WORKSPACE/project
+  #           chmod +x update_hosts.sh
+  #           ./update_hosts.sh
+  #           cd ../ansible
+  #           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+
+  
 

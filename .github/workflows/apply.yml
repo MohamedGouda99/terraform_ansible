@@ -81,5 +81,5 @@ jobs:
             ./update_inventory.sh
             cd $GITHUB_WORKSPACE/ansible
 
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+            sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "MISSION COMPLETED"

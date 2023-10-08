@@ -61,7 +61,9 @@ jobs:
         run: ansible --version
       
       - name: Install BOTO3
-        run: pip3 install boto3
+        run: |
+          pip3 install boto3
+          pip3 install botocore
 
       - name: Delete SSH RULE
         run: |

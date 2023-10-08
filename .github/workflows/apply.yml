@@ -38,6 +38,7 @@ jobs:
           terraform apply --auto-approve 
           chmod +x copy_tfstate.sh 
           ./copy_tfstate.sh
+
          
 
   Apply_Ansible:

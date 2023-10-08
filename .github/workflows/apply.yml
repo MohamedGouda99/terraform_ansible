@@ -38,6 +38,7 @@ jobs:
           chmod +x update_hosts.sh
           sudo apt install dos2unix 
           dos2unix update_hosts.sh
+          ./restore_tfstate.sh
           ./update_hosts.sh
 #          terraform init
 #          terraform apply --auto-approve 

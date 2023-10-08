@@ -35,11 +35,7 @@ jobs:
           aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
           aws configure set default.region ${{secrets.AWS_REGION}}
 
-          chmod +x update_hosts.sh && chmod +x restore_tfstate.sh
-          sudo apt install dos2unix 
-          dos2unix update_hosts.sh
-          ./restore_tfstate.sh
-          ./update_hosts.sh
+         
 #          terraform init
 #          terraform apply --auto-approve 
 #          chmod +x copy_tfstate.sh 
@@ -77,7 +73,11 @@ jobs:
       - name: Exexcuting update_hosts.sh
         run: |
             cd $GITHUB_WORKSPACE/project
-            
+            chmod +x update_hosts.sh && chmod +x restore_tfstate.sh
+            sudo apt install dos2unix 
+            dos2unix update_hosts.sh
+            ./restore_tfstate.sh
+            ./update_hosts.sh
             cd ../ansible
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "DONE"

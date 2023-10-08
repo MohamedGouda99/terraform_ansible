@@ -46,7 +46,6 @@ jobs:
           aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
           aws configure set default.region ${{secrets.AWS_REGION}}
           ./restore_tfstatefile.sh
-          ./delete_image.sh
           ./remove_s3.sh          
           terraform init
           terraform destroy --auto-approve 

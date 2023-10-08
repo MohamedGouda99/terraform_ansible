@@ -1,0 +1,5 @@
+- name: Run Firewall
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - add_ssh_rule

@@ -1,0 +1,9 @@
+- name: Install Podman on RHEL
+  yum:
+    name: podman
+    state: present
+  become: yes
+
+- name: Start Nginx container
+  command: podman run -d --name nginx-container-10 -p 8084:80 docker.io/nginx
+  become: yes

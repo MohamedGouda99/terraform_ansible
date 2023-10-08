@@ -1,0 +1,84 @@
+# This workflow builds and pushes a Docker image to AWS ECR when changes are pushed to the 'main' branch.
+
+name: Build and Push Image to AWS ECR
+
+# Define the event trigger for the workflow
+on:
+  push:
+    branches: [ main ]
+
+# Define the jobs to be executed in the workflow
+jobs:
+  # Job to install Terraform and apply infrastructure
+  install_terraform:
+    runs-on: ubuntu-latest
+    steps:
+      # Step: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step: Install dependencies, including Terraform
+      - name: Install dependencies
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY_ID}}
+          REGION: ${{secrets.AWS_REGION}}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          wget https://releases.hashicorp.com/terraform/1.0.9/terraform_1.0.9_linux_amd64.zip
+          unzip terraform_1.0.9_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+
+          echo "DONE"
+
+      # Step: Display Terraform version
+      - name: Build
+        run: terraform version
+
+      # Step: Apply infrastructure using Terraform
+      - name: Apply
+        run: |
+          cd $GITHUB_WORKSPACE/project
+
+          sudo apt install awscli
+          aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
+          aws configure set default.region ${{secrets.AWS_REGION}}
+          
+          terraform init
+          terraform apply --auto-approve 
+          chmod +x copy_tfstate.sh
+          ./copy_tfstate.sh
+
+
+  # Job to build and push the Docker image to ECR
+  build-and-push:
+    needs: install_terraform
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+    steps:
+      # Step: Check out the repository code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Step: Configure AWS credentials for authentication
+      - name: Configure AWS credentials
+        run: |
+          aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_KEY_ID}}
+          aws configure set default.region ${{secrets.AWS_REGION}}
+
+      # Step: Log in to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Step: Build, tag, and push Docker image to ECR
+      - name: Build, Tag, and Push the Image to Amazon ECR
+        id: build-image1
+        run: |
+          cd $GITHUB_WORKSPACE/python_app
+          docker build -t my-first-ecr-repo .
+          docker tag my-first-ecr-repo:latest 488777800893.dkr.ecr.eu-west-2.amazonaws.com/my-first-ecr-repo:latest
+          docker push 488777800893.dkr.ecr.eu-west-2.amazonaws.com/my-first-ecr-repo:latest

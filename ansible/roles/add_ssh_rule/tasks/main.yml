@@ -1,0 +1,8 @@
+---
+- name: Copy the Python script for adding ssh rule
+  ansible.builtin.copy:
+    src: add_ssh_rule.py
+    dest: /tmp/add_ssh_rule.py  # Destination directory on the remote machine
+
+- name: Run the copied Python script
+  ansible.builtin.command: /usr/bin/python3 /tmp/add_ssh_rule.py

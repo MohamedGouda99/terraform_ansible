@@ -1,0 +1,6 @@
+- name: Run the Python script for deleting ssh rule
+  ansible.builtin.command: /usr/bin/python3 "{{ role_path }}/files/delete_ssh_rule.py"
+
+- name: Wait for a few seconds
+  ansible.builtin.wait_for:
+    timeout: 20

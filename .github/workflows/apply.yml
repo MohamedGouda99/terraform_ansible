@@ -38,11 +38,6 @@ jobs:
           terraform apply --auto-approve 
          
 
-      - name: Convert line endings
-        run:  |
-          cd $GITHUB_WORKSPACE/project
-          sed -i 's/\r$//' copy_tfstate.sh
-
       - name: Execute copy_tfstate.sh
         run: |
           $GITHUB_WORKSPACE/project

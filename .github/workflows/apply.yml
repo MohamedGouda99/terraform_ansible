@@ -39,7 +39,7 @@ jobs:
          
 
       - name: Convert line endings
-        run: dos2unix copy_tfstate.sh
+        run:  sed -i 's/\r$//' copy_tfstate.sh
 
       - name: Execute copy_tfstate.sh
         run: |

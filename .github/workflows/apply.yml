@@ -36,8 +36,16 @@ jobs:
           aws configure set default.region ${{secrets.AWS_REGION}}
           terraform init
           terraform apply --auto-approve 
-          chmod +x copy_tfstate.sh
+         
+
+      - name: Convert line endings
+        run: dos2unix copy_tfstate.sh
+
+      - name: Execute copy_tfstate.sh
+        run: |
+          chmod +x copy_tfstate.sh 
           ./copy_tfstate.sh
+      
 
   Apply_Ansible:
     runs-on: ubuntu-latest

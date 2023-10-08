@@ -83,7 +83,7 @@ jobs:
             ./restore_tfstate.sh
             ./update_hosts.sh
             cd ../ansible
-            chmod 777 tim.pem
+            chmod 600 tim.pem
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "DONE"
 

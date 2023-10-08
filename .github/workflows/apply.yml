@@ -81,5 +81,5 @@ jobs:
             cd $GITHUB_WORKSPACE/ansible
             chmod +x update_inventory.sh
             ./update_inventory.sh
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman.yml
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "MISSION COMPLETED"

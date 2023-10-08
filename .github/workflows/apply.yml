@@ -61,11 +61,14 @@ jobs:
       - name: Verify Ansible Installation
         run: ansible --version
       
-    
+      - name: install boto3
+        run : |
+          cd $GITHUB_WORKSPACE/ansible/roles
+          pip3 install boto3 --upgrade
 
       - name: Delete SSH RULE
         run: |
-            pip3 install boto3 --upgrade
+            
             cd $GITHUB_WORKSPACE/ansible
            
             ansible-playbook delete_ssh_rule.yml

@@ -83,7 +83,7 @@ jobs:
             ./restore_tfstate.sh
             ./update_hosts.sh
             cd ../ansible
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+            sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
             echo "DONE"
 
   

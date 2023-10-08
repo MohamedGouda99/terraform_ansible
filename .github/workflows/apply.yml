@@ -65,7 +65,7 @@ jobs:
       - name: Delete SSH RULE
         run: |
             cd $GITHUB_WORKSPACE/ansible
-            python3 -m pip install boto3
+            pip3 install boto3 --upgrade
             ansible-playbook delete_ssh_rule.yml
 
       - name: Add SSH RULE

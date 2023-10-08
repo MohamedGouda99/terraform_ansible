@@ -38,63 +38,44 @@ jobs:
           #terraform apply --auto-approve 
           #chmod +x copy_tfstate.sh 
           #./copy_tfstate.sh
+
+      
+
+         
+
+  Configure_Ansible:
+    runs-on: ubuntu-latest
+    needs: Build_Project
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-  
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10' # Use the desired Python version
-
 
       - name: Install Ansible
         run: |
           python3 -m pip install --upgrade pip
           pip install ansible
           pip install boto3
+          
 
-
+      - name: Verify Ansible Installation
+        run: ansible --version
+      
+      
       - name: Exexcuting update_hosts.sh
         run: |
             cd $GITHUB_WORKSPACE/project
             chmod +x update_hosts.sh
+            sudo apt install dos2unix 
+            dos2unix update_hosts.sh
             ./update_hosts.sh
             cd ../ansible
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
-          
-
-         
-
-  # Configure_Ansible:
-  #   runs-on: ubuntu-latest
-  #   needs: Build_Project
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.10' # Use the desired Python version
-
-  #     - name: Install Ansible
-  #       run: |
-  #         python3 -m pip install --upgrade pip
-  #         pip install ansible
-  #         pip install boto3
-          
-
-  #     - name: Verify Ansible Installation
-  #       run: ansible --version
-      
-      
-  #     - name: Exexcuting update_hosts.sh
-  #       run: |
-  #           cd $GITHUB_WORKSPACE/project
-  #           chmod +x update_hosts.sh
-  #           ./update_hosts.sh
-  #           cd ../ansible
-  #           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+            echo "DONE"
 
   
 

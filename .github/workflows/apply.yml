@@ -41,7 +41,7 @@ jobs:
 
          
 
-  Apply_Ansible:
+  Configure_Ansible:
     runs-on: ubuntu-latest
     needs: Build_Project
     steps:
@@ -77,12 +77,20 @@ jobs:
       #       cd $GITHUB_WORKSPACE/ansible
       #       ansible-playbook add_ssh_rule.yml
       
-      - name: Configure Podman
+      - name: Exexcuting update_hosts.sh
         run: |
             cd $GITHUB_WORKSPACE/project
             chmod +x update_hosts.sh
             ./update_hosts.sh
-            cd ../ansible
-            chmod 777 tim.pem
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
-            echo "MISSION 42"
+
+  deployAnsible:
+    needs: Configure_Ansible
+    runs-on: ubuntu-latest
+   
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/ansible
+        with: 
+          playbook: ./.github/ansible/install_podman
+          inventory: ./.github/ansible/hosts
+

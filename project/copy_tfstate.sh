@@ -1,7 +1,4 @@
 #!/bin/bash
-
-
-
 # Replace with your S3 bucket name
 BUCKET_NAME="sprints-remote-statefile"
 

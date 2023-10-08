@@ -1,6 +1,0 @@
-- name: Run Firewall
-  hosts: all
-  gather_facts: false
-  roles:
-    - install_podman
-    

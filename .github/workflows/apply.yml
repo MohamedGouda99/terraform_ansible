@@ -82,14 +82,16 @@ jobs:
             cd $GITHUB_WORKSPACE/project
             chmod +x update_hosts.sh
             ./update_hosts.sh
+            cd ../ansible
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
 
-  deployAnsible:
-    needs: Configure_Ansible
-    runs-on: ubuntu-latest
+  # deployAnsible:
+  #   needs: Configure_Ansible
+  #   runs-on: ubuntu-latest
    
-    steps:
-      - name: deployAnsible
-        run: |
-          cd ansible
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+  #   steps:
+  #     - name: deployAnsible
+  #       run: |
+  #         cd ansible
+  #         ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
 

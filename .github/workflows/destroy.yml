@@ -49,6 +49,6 @@ jobs:
           ./remove_s3.sh          
           terraform init
           terraform destroy --auto-approve 
-          echo "MISSION tt"
+          echo "MISSION DONE"
 
           

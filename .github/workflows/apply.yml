@@ -89,5 +89,7 @@ jobs:
    
     steps:
       - name: deployAnsible
-        run: ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
+        run: |
+          cd $GITHUB_WORKSPACE/ansible
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts install_podman
 

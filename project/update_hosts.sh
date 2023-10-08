@@ -1,6 +1,6 @@
-
+#!/bin/bash
 Get_EC2_IP() {
-    
+  
     EC2_IP=$(terraform output server-ip)
 }
 
